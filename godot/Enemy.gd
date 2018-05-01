@@ -9,8 +9,5 @@ func _ready():
 
 	# add loop component child node
 	add_child(load("res://LoopComponent.gd").new())
-
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+	
+	add_to_group("enemies")

@@ -28,4 +28,12 @@ func _physics_process(delta):
 	
 	linear_velocity.x = lerp(linear_velocity.x, target_speed.x, 0.1)
 	linear_velocity.y = lerp(linear_velocity.y, target_speed.y, 0.1)
-	move_and_slide(linear_velocity)
+
+	collide(move_and_collide(linear_velocity * delta))
+
+
+func collide(info):
+	if info == null:
+		return
+	if info.collider.is_in_group("enemies"):
+		queue_free()
