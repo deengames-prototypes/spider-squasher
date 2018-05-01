@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "gut" )
+enabled=PoolStringArray( "gut", "open-external-editor" )
 
 [input]
 
