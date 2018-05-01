@@ -6,8 +6,8 @@
 [node name="MainScene" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
-enemies_per_second = 0.333
-enemy_spawn_rate_delta = 0.2
+seconds_per_enemy = 2
+enemy_spawn_rate_delta = 1.5
 
 [node name="KinematicBody2D" parent="." index="0" instance=ExtResource( 2 )]
 
