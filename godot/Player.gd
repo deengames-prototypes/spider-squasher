@@ -36,4 +36,5 @@ func collide(info):
 	if info == null:
 		return
 	if info.collider.is_in_group("enemies"):
+		get_tree().quit()
 		queue_free()
