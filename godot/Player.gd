@@ -33,7 +33,6 @@ func _physics_process(delta):
 
 
 func collide(info):
-	if info == null:
-		return
-	if info.collider.is_in_group("enemies"):
-		queue_free()
+	if info != null:
+		if info.collider.is_in_group("enemies") or info.collider.is_in_group("lava"):
+			queue_free()

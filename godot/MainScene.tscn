@@ -1,9 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://MainScene.gd" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Lava.gd" type="Script" id=3]
+[ext_resource path="res://lava.png" type="Texture" id=4]
 
-[node name="MainScene" type="Node2D"]
+[sub_resource type="RectangleShape2D" id=1]
+
+custom_solver_bias = 0.0
+extents = Vector2( 10, 10 )
+
+[node name="MainScene" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
 seconds_per_enemy = 2
@@ -11,6 +18,49 @@ enemy_spawn_rate_delta = 1.5
 
 [node name="KinematicBody2D" parent="." index="0" instance=ExtResource( 2 )]
 
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Collision", "Transform", "collision" ]
+
+[node name="Lava1" type="KinematicBody2D" parent="." index="1"]
+
+position = Vector2( -149.69, -92.2746 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+collision/safe_margin = 0.08
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Lava1" index="0"]
+
+position = Vector2( 527.644, 206.534 )
+scale = Vector2( 0.534911, 2.12208 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lava1" index="1"]
+
+position = Vector2( 531.922, 202.409 )
+scale = Vector2( 4.30615, 20.4029 )
+shape = SubResource( 1 )
+
+[node name="Lava2" type="KinematicBody2D" parent="." index="2"]
+
+position = Vector2( 405.803, 435.335 )
+scale = Vector2( 0.993575, 0.506728 )
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+collision/safe_margin = 0.08
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Lava2" index="0"]
+
+position = Vector2( 380.783, 306.304 )
+scale = Vector2( -0.784246, 1.12438 )
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lava2" index="1"]
+
+position = Vector2( 379.863, 312.547 )
+scale = Vector2( -6.59691, 11.6195 )
+shape = SubResource( 1 )
 
 
