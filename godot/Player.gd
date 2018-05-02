@@ -35,4 +35,5 @@ func _physics_process(delta):
 func collide(info):
 	if info != null:
 		if info.collider.is_in_group("enemies") or info.collider.is_in_group("lava"):
+		get_tree().quit()
 			queue_free()
