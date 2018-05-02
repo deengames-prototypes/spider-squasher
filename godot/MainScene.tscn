@@ -8,8 +8,10 @@
 script = ExtResource( 1 )
 seconds_per_enemy = 2
 enemy_spawn_rate_delta = 1.5
+bullet_speed = 600
+bullets_per_second = 0.5
 
-[node name="KinematicBody2D" parent="." index="0" instance=ExtResource( 2 )]
+[node name="Player" parent="." index="0" instance=ExtResource( 2 )]
 
 _sections_unfolded = [ "Transform" ]
 
