@@ -11,6 +11,7 @@ var PowerUp = preload("res://PowerUp.tscn")
 
 var time_since_enemy_spawn = 0
 var time_since_powerup = 0
+var score = 0
 
 var powerup_table = [  # attribute, magnitude, duration
 	["movement_speed", 100, 5],
@@ -36,7 +37,7 @@ func _process(delta):
 		time_since_powerup = 0
 		var powerup_info = powerup_table[randi() % powerup_table.size()]
 		var powerup = PowerUp.instance()
-		powerup.init(powerup_info[0], powerup_info[1], powerup_info[2])
+		powerup.init($Player, powerup_info[0], powerup_info[1], powerup_info[2])
 		$Player.connect("killed", powerup, "_on_Player_killed")
 		add_child(powerup)
 
@@ -47,7 +48,14 @@ func _on_Player_killed():
 
 func _on_Player_shoot_plasma(plasma_ball):
 	add_child(plasma_ball)
+	plasma_ball.connect("killed_enemy", self, "_on_enemy_killed")
 
 
 func _on_Player_shoot_bullet(bullet):
 	add_child(bullet)
+	bullet.connect("killed_enemy", self, "_on_enemy_killed")
+
+
+func _on_enemy_killed():
+	score += 10
+	$ScoreLabel.set_text(String(score))

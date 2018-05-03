@@ -4,6 +4,8 @@ export (float) var bullet_speed = 600
 
 var velocity
 
+signal killed_enemy
+
 
 func _process(delta):
 	collide(move_and_collide(velocity * delta))
@@ -15,6 +17,7 @@ func collide(info):
 	if info.collider.is_in_group("enemies"):
 		info.collider.queue_free()
 		queue_free()
+		emit_signal("killed_enemy")
 
 
 func init(x, y, angle):

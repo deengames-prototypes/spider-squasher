@@ -7,6 +7,8 @@ var player
 var is_shot = false
 var velocity
 
+signal killed_enemy
+
 
 func init(plyr):
 	player = plyr
@@ -32,3 +34,4 @@ func _physics_process(delta):
 		if collision_info != null:
 			if collision_info.collider.is_in_group("enemies"):
 				collision_info.collider.queue_free()
+				emit_signal("killed_enemy")

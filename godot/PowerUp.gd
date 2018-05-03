@@ -2,7 +2,7 @@ extends Area2D
 
 var powered_attribute
 var magnitude
-var powered_thing
+var player
 var is_activated = false
 
 func _ready():
@@ -12,24 +12,24 @@ func _ready():
 	position.y = rand_range(0, height)
 
 
-func init(attr, magni, duration):
+func init(_player, attr, magni, duration):
+	player = _player
 	powered_attribute = attr
 	magnitude = magni
 	$Timer.set_wait_time(duration)
 
 func _on_PowerUp_body_entered(body):
-	if body.get(powered_attribute) != null and not is_activated:
+	if body == player and not is_activated:
 		is_activated = true
-		powered_thing = body
-		powered_thing.set(powered_attribute, powered_thing.get(powered_attribute) + magnitude)
+		player.set(powered_attribute, player.get(powered_attribute) + magnitude)
 		hide()
-		print(powered_attribute, ' : ', powered_thing.get(powered_attribute))
+		print(player, ' : ', player.get(powered_attribute))
 		$Timer.start()
 
 
 func _on_Timer_timeout():
-	powered_thing.set(powered_attribute, powered_thing.get(powered_attribute) - magnitude)
-	print(powered_attribute, ' ; ', powered_thing.get(powered_attribute))
+	player.set(powered_attribute, player.get(powered_attribute) - magnitude)
+	print(powered_attribute, ' ; ', player.get(powered_attribute))
 
 
 func _on_Player_killed():
