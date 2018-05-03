@@ -6,8 +6,10 @@
 [node name="MainScene" type="Node2D"]
 
 script = ExtResource( 1 )
-seconds_per_enemy = 2
+enemies_per_second = 0.5
 enemy_spawn_rate_delta = 1.5
+powerups_per_second = 0.3
+powerups_delta = 1.5
 
 [node name="Player" parent="." index="0" instance=ExtResource( 2 )]
 
