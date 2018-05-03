@@ -8,15 +8,14 @@
 script = ExtResource( 1 )
 seconds_per_enemy = 2
 enemy_spawn_rate_delta = 1.5
-bullet_speed = 600
-bullets_per_second = 0.5
 
 [node name="Player" parent="." index="0" instance=ExtResource( 2 )]
 
 _sections_unfolded = [ "Transform" ]
-seconds_per_plasma_shot = 2
 
 [connection signal="killed" from="Player" to="." method="_on_Player_killed"]
+
+[connection signal="shoot_bullet" from="Player" to="." method="_on_Player_shoot_bullet"]
 
 [connection signal="shoot_plasma" from="Player" to="." method="_on_Player_shoot_plasma"]
 

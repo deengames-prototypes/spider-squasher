@@ -1,14 +1,13 @@
 extends KinematicBody2D
 
+export (float) var bullet_speed = 600
+
 var velocity
 
-func _ready():
-	# Called every time the node is added to the scene.
-	# Initialization here
-	pass
 
 func _process(delta):
 	collide(move_and_collide(velocity * delta))
+
 
 func collide(info):
 	if info == null:
@@ -17,8 +16,9 @@ func collide(info):
 		info.collider.queue_free()
 		queue_free()
 
-func init(x, y, vl):
+
+func init(x, y, angle):
 	position.x = x
 	position.y = y
-	velocity = vl
+	velocity = Vector2(-bullet_speed, 0).rotated(angle)
 	

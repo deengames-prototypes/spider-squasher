@@ -15,7 +15,8 @@ collision_mask = 1
 collision/safe_margin = 0.08
 script = ExtResource( 1 )
 movement_speed = 300
-seconds_per_plasma_shot = 2
+plasma_shots_per_second = 0.5
+bullets_per_second = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
