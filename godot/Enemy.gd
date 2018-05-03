@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 export (float) var movement_speed = 150
+export (float) var min_distance_from_player = 300
 var player
 
 signal killed_player
@@ -9,8 +10,12 @@ signal killed_player
 func _ready():
 	var width = ProjectSettings.get_setting("display/window/size/width")
 	var height = ProjectSettings.get_setting("display/window/size/height")
-	position.x = rand_range(0, width)
-	position.y = rand_range(0, height)
+	var player_ref = player.get_ref()
+	position.x = player_ref.position.x
+	position.y = player_ref.position.y
+	while position.distance_to(player_ref.position) < 200:
+		position.x = rand_range(0, width)
+		position.y = rand_range(0, height)
 
 	# add loop component child node
 	add_child(load("res://LoopComponent.gd").new())
