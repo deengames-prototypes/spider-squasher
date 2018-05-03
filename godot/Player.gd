@@ -1,10 +1,15 @@
 extends KinematicBody2D
 
 export (int) var movement_speed = 300
+export (float) var seconds_per_plasma_shot = 2
 
 var linear_velocity = Vector2()
+var PlasmaCharge = load("res://PlasmaCharge.tscn")
+var time_since_last_plasma = seconds_per_plasma_shot
 
 signal killed
+signal shoot_plasma(plasma_ball)
+
 
 func _ready():
 	# place player in the middle of the screen
@@ -13,6 +18,16 @@ func _ready():
 	
 	# add loop component child node
 	add_child(load("res://LoopComponent.gd").new())
+
+
+func _process(delta):
+	time_since_last_plasma += delta
+	
+	if Input.is_action_just_pressed("shoot_plasma") and time_since_last_plasma >= seconds_per_plasma_shot:
+		time_since_last_plasma = 0
+		var current_plasma_charge = PlasmaCharge.instance()
+		current_plasma_charge.init(self)
+		emit_signal("shoot_plasma", current_plasma_charge)
 
 
 func _physics_process(delta):

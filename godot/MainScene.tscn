@@ -3,7 +3,7 @@
 [ext_resource path="res://MainScene.gd" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
 
-[node name="MainScene" type="Node2D" index="0"]
+[node name="MainScene" type="Node2D"]
 
 script = ExtResource( 1 )
 seconds_per_enemy = 2
@@ -14,7 +14,10 @@ bullets_per_second = 0.5
 [node name="Player" parent="." index="0" instance=ExtResource( 2 )]
 
 _sections_unfolded = [ "Transform" ]
+seconds_per_plasma_shot = 2
 
 [connection signal="killed" from="Player" to="." method="_on_Player_killed"]
+
+[connection signal="shoot_plasma" from="Player" to="." method="_on_Player_shoot_plasma"]
 
 

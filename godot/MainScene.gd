@@ -33,3 +33,6 @@ func _process(delta):
 
 func _on_Player_killed():
 	get_tree().change_scene('res://MainScene.tscn')
+
+func _on_Player_shoot_plasma(plasma_ball):
+	add_child(plasma_ball)
