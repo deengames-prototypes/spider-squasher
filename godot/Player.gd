@@ -4,6 +4,7 @@ export (int) var movement_speed = 300
 
 var linear_velocity = Vector2()
 
+signal killed
 
 func _ready():
 	# place player in the middle of the screen
@@ -35,5 +36,4 @@ func _physics_process(delta):
 func collide(info):
 	if info != null:
 		if info.collider.is_in_group("enemies") or info.collider.is_in_group("lava"):
-		get_tree().quit()
-			queue_free()
+			emit_signal('killed')

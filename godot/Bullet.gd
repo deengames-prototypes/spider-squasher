@@ -16,3 +16,9 @@ func collide(info):
 	if info.collider.is_in_group("enemies"):
 		info.collider.queue_free()
 		queue_free()
+
+func init(x, y, vl):
+	position.x = x
+	position.y = y
+	velocity = vl
+	

@@ -18,15 +18,18 @@ func _process(delta):
 	var randomizer = rand_range(-enemy_spawn_rate_delta, enemy_spawn_rate_delta)
 	if time_since_enemy_spawn > seconds_per_enemy + randomizer:
 		time_since_enemy_spawn = 0
-		add_child(Enemy.instance())
+		var enemy = Enemy.instance()
+		enemy.init($Player)
+		enemy.connect('killed_player', self, '_on_Player_killed')
+		add_child(enemy)
 
 	if Input.is_action_pressed("shoot") and time_since_last_fire > bullets_per_second:
 		time_since_last_fire = 0
 		var angle = $Player.position.angle_to_point(get_viewport().get_mouse_position())
 		var bullet = bullet_class.instance()
+		bullet.init($Player.position.x, $Player.position.y, Vector2(-bullet_speed, 0).rotated(angle))
+		
 		add_child(bullet)
-		
-		bullet.position.x = $Player.position.x
-		bullet.position.y = $Player.position.y
-		
-		bullet.velocity = Vector2(-bullet_speed, 0).rotated(angle)
+
+func _on_Player_killed():
+	get_tree().change_scene('res://MainScene.tscn')
