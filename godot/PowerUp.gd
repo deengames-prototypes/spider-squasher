@@ -3,6 +3,7 @@ extends Area2D
 var powered_attribute
 var magnitude
 var powered_thing
+var is_activated = false
 
 func _ready():
 	var width = ProjectSettings.get_setting("display/window/size/width")
@@ -17,10 +18,11 @@ func init(attr, magni, duration):
 	$Timer.set_wait_time(duration)
 
 func _on_PowerUp_body_entered(body):
-	if body.get(powered_attribute) != null:
+	if body.get(powered_attribute) != null and not is_activated:
+		is_activated = true
 		powered_thing = body
 		powered_thing.set(powered_attribute, powered_thing.get(powered_attribute) + magnitude)
-		queue_free()
+		hide()
 		print(powered_attribute, ' : ', powered_thing.get(powered_attribute))
 		$Timer.start()
 
