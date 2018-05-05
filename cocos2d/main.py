@@ -20,6 +20,18 @@ class CollidableSprite(cocos.sprite.Sprite):
         half_height = self.height / 2
 
         self.cshape = cm.AARectShape(self.position, half_width, half_height)
+        self.schedule(self.loop)
+
+    def loop(self, delta):
+        window_x, window_y = cocos.director.director.get_window_size()
+        if self.x > window_x:
+            self.x -= window_x
+        if self.x < 0:
+            self.x += window_x
+        if self.y > window_y:
+            self.y -= window_y
+        if self.y < 0:
+            self.y += window_y
 
 
 class Enemy(CollidableSprite):
