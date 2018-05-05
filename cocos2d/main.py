@@ -1,9 +1,13 @@
+import random
+
 import cocos
 from pyglet.window import key as K
 import cocos.collision_model as cm
 
 
 MOVEMENT_SPEED = 200
+ENEMIES_PER_SECOND = 0.5
+SAFE_RANGE = 100
 
 
 class CollidableSprite(cocos.sprite.Sprite):
@@ -30,7 +34,11 @@ class Game(cocos.layer.Layer):
         self.collision_manager.add(self.player)
 
         self.pressed_keys = set()
-        self.schedule(lambda delta: self.update(delta))
+
+        self.schedule(self.update)
+
+        self.time_since_enemy_spawn = 0
+        self.schedule(self.spawn_enemies)
 
     def on_key_press(self, key, modifiers):
         self.pressed_keys.add(key)
@@ -48,6 +56,21 @@ class Game(cocos.layer.Layer):
                 self.player.x -= MOVEMENT_SPEED * delta
             elif key == K.RIGHT:
                 self.player.x += MOVEMENT_SPEED * delta
+
+    def spawn_enemies(self, delta):
+        self.time_since_enemy_spawn += delta
+        if self.time_since_enemy_spawn > 1/ENEMIES_PER_SECOND:
+            self.time_since_enemy_spawn = 0
+            window_x, window_y = cocos.director.director.get_window_size()
+
+            enemy_pos = self.player.position
+
+            while (abs(enemy_pos[0] - self.player.position[0]) <= SAFE_RANGE
+                   or abs(enemy_pos[1] - self.player.position[1]) <= SAFE_RANGE):
+                enemy_pos = random.randrange(0, window_x), random.randrange(0, window_y)
+
+            enemy = CollidableSprite('enemy.png', *enemy_pos)
+            self.add(enemy)
 
 
 if __name__ == '__main__':
