@@ -1,4 +1,5 @@
 import random
+from math import cos, sin, atan2
 
 import cocos
 from pyglet.window import key as K
@@ -6,6 +7,7 @@ import cocos.collision_model as cm
 
 
 MOVEMENT_SPEED = 200
+ENEMY_MOVEMENT_SPEED = 150
 ENEMIES_PER_SECOND = 0.5
 SAFE_RANGE = 100
 
@@ -18,6 +20,21 @@ class CollidableSprite(cocos.sprite.Sprite):
         half_height = self.height / 2
 
         self.cshape = cm.AARectShape(self.position, half_width, half_height)
+
+
+class Enemy(CollidableSprite):
+    def __init__(self, player, center_x, center_y):
+        super().__init__('enemy.png', center_x, center_y)
+        self.player = player
+        self.schedule(self.move)
+
+    def move(self, delta):
+        vec = (-ENEMY_MOVEMENT_SPEED, 0)
+        ang = atan2(self.y - self.player.y, self.x - self.player.x)
+        rotated = (vec[0] * cos(ang) - vec[1] * sin(ang), vec[0] * sin(ang) + vec[1] * cos(ang))
+
+        self.x += rotated[0] * delta
+        self.y += rotated[1] * delta
 
 
 class Game(cocos.layer.Layer):
@@ -63,13 +80,13 @@ class Game(cocos.layer.Layer):
             self.time_since_enemy_spawn = 0
             window_x, window_y = cocos.director.director.get_window_size()
 
-            enemy_pos = self.player.position
+            x, y = self.player.x, self.player.y
 
-            while (abs(enemy_pos[0] - self.player.position[0]) <= SAFE_RANGE
-                   or abs(enemy_pos[1] - self.player.position[1]) <= SAFE_RANGE):
-                enemy_pos = random.randrange(0, window_x), random.randrange(0, window_y)
+            while (abs(x - self.player.x) <= SAFE_RANGE
+                   or abs(y - self.player.y) <= SAFE_RANGE):
+                x, y = random.randrange(0, window_x), random.randrange(0, window_y)
 
-            enemy = CollidableSprite('enemy.png', *enemy_pos)
+            enemy = Enemy(self.player, x, y)
             self.add(enemy)
 
 
