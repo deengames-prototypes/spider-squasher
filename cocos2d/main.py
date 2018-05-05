@@ -3,11 +3,13 @@ from math import cos, sin, atan2
 
 import cocos
 from pyglet.window import key as K
+from pyglet.window import mouse as M
 import cocos.collision_model as cm
 
 
 MOVEMENT_SPEED = 200
-ENEMY_MOVEMENT_SPEED = 150
+ENEMY_MOVEMENT_SPEED = 200
+BULLET_SPEED = 500
 ENEMIES_PER_SECOND = 0.5
 SAFE_RANGE = 100
 
@@ -53,6 +55,23 @@ class Enemy(CollidableSprite):
         self.y += rotated[1] * delta
 
 
+class Bullet(CollidableSprite):
+    def __init__(self, ang, center_x, center_y):
+        super().__init__('bullet.png', center_x, center_y)
+        vec = (BULLET_SPEED, 0)
+        rotated = (vec[0] * cos(ang) - vec[1] * sin(ang), vec[0] * sin(ang) + vec[1] * cos(ang))
+        self.velocity = rotated
+        self.schedule(self.move)
+        self.rotation = ang
+
+    def move(self, delta):
+        self.x += self.velocity[0] * delta
+        self.y += self.velocity[1] * delta
+
+    def loop(self, delta):
+        pass
+
+
 class Game(cocos.layer.Layer):
     is_event_handler = True
 
@@ -68,7 +87,7 @@ class Game(cocos.layer.Layer):
 
         self.pressed_keys = set()
 
-        self.schedule(self.update)
+        self.schedule(self.process_keys)
 
         self.time_since_enemy_spawn = 0
         self.schedule(self.spawn_enemies)
@@ -84,7 +103,15 @@ class Game(cocos.layer.Layer):
         except KeyError:
             pass
 
-    def update(self, delta):
+    def on_mouse_press(self, x, y, buttons, modifiers):
+        if buttons == M.LEFT:
+            ang = atan2(y - self.player.y, x - self.player.x)
+
+            bullet = Bullet(ang, self.player.x, self.player.y)
+            self.add(bullet)
+            self.collision_manager.add(bullet)
+
+    def process_keys(self, delta):
         for key in self.pressed_keys:
             if key == K.UP:
                 self.player.y += MOVEMENT_SPEED * delta
@@ -112,10 +139,23 @@ class Game(cocos.layer.Layer):
             self.collision_manager.add(enemy)
 
     def collisions(self, delta):
-        for obj in self.collision_manager.objs_colliding(self.player):
-            if type(obj) is Enemy:
-                self.player.kill()
-                cocos.director.director.run(cocos.scene.Scene(Game()))
+        to_remove = set()
+
+        for collision in self.collision_manager.iter_all_collisions():
+            collision = list(collision)
+            if self.player in collision:
+                collision.remove(self.player)
+                if type(collision[0]) is Enemy:
+                    self.player.kill()
+                    cocos.director.director.run(cocos.scene.Scene(Game()))
+
+            elif {Enemy, Bullet} == {type(obj) for obj in collision}:
+                for obj in collision:
+                    obj.kill()
+                    to_remove.add(obj)
+
+        for obj in to_remove:
+            self.collision_manager.remove_tricky(obj)
 
 
 if __name__ == '__main__':
