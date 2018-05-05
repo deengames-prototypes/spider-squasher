@@ -21,6 +21,7 @@ class CollidableSprite(cocos.sprite.Sprite):
 
         self.cshape = cm.AARectShape(self.position, half_width, half_height)
         self.schedule(self.loop)
+        self.schedule(self.update_shape)
 
     def loop(self, delta):
         window_x, window_y = cocos.director.director.get_window_size()
@@ -32,6 +33,9 @@ class CollidableSprite(cocos.sprite.Sprite):
             self.y -= window_y
         if self.y < 0:
             self.y += window_y
+
+    def update_shape(self, delta):
+        self.cshape.center = self.position
 
 
 class Enemy(CollidableSprite):
@@ -69,11 +73,16 @@ class Game(cocos.layer.Layer):
         self.time_since_enemy_spawn = 0
         self.schedule(self.spawn_enemies)
 
+        self.schedule(self.collisions)
+
     def on_key_press(self, key, modifiers):
         self.pressed_keys.add(key)
 
     def on_key_release(self, key, modifiers):
-        self.pressed_keys.remove(key)
+        try:
+            self.pressed_keys.remove(key)
+        except KeyError:
+            pass
 
     def update(self, delta):
         for key in self.pressed_keys:
@@ -100,6 +109,13 @@ class Game(cocos.layer.Layer):
 
             enemy = Enemy(self.player, x, y)
             self.add(enemy)
+            self.collision_manager.add(enemy)
+
+    def collisions(self, delta):
+        for obj in self.collision_manager.objs_colliding(self.player):
+            if type(obj) is Enemy:
+                self.player.kill()
+                cocos.director.director.run(cocos.scene.Scene(Game()))
 
 
 if __name__ == '__main__':
