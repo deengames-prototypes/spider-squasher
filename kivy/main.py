@@ -11,10 +11,10 @@ from kivy.graphics import *
 from kivy.vector import Vector
 
 MOVEMENT_SPEED = 200
-ENEMY_MOVEMENT_SPEED = 200
+ENEMY_MOVEMENT_SPEED = 100
 BULLET_SPEED = 500
 ENEMIES_PER_SECOND = 0.5
-SAFE_RANGE = 100
+SAFE_RANGE = 300
 
 
 class Entity(EventDispatcher):
@@ -34,11 +34,33 @@ class Entity(EventDispatcher):
         self.group.add(self.color)
         self.group.add(self.rect)
 
+        self.is_alive = True
+
     def on_x(self, instance, value):
         self.rect.pos = (value, self.rect.pos[1])
 
     def on_y(self, instance, value):
         self.rect.pos = (self.rect.pos[0], value)
+
+    @property
+    def width(self):
+        return self.size[0]
+
+    @property
+    def height(self):
+        return self.size[1]
+
+    def intersects(self, other):
+        return not (
+            self.x > other.x + other.width
+            or self.x + self.width < other.x
+            or self.y > other.y + other.height
+            or self.y + self.height < other.y
+        )
+
+    def kill(self):
+        self.group.clear()
+        self.is_alive = False
 
 
 class LoopingEntity(Entity):
@@ -64,11 +86,13 @@ class Enemy(LoopingEntity):
     size = (48, 48)
 
     def update(self, dt, player):
-        ang = math.degrees(math.atan2(self.y - player.y, self.x - player.x))
-        rotated = Vector(-ENEMY_MOVEMENT_SPEED, 0).rotate(ang)
+        if self.is_alive:
+            ang = math.degrees(math.atan2(self.y - player.y, self.x - player.x))
+            rotated = Vector(-ENEMY_MOVEMENT_SPEED, 0).rotate(ang)
 
-        self.x += rotated.x * dt
-        self.y += rotated.y * dt
+            self.x += rotated.x * dt
+            self.y += rotated.y * dt
+            # print(self.x, ',', self.y, ':', self.is_alive)
 
 
 class Player(LoopingEntity):
@@ -78,12 +102,11 @@ class Player(LoopingEntity):
 
 class Bullet(Entity):
     color = Color(1, 1, 1)
-    size = (8, 8)
+    size = (16, 16)
 
     def __init__(self, x, y, angle):
         super().__init__(x, y)
         self.angle = angle
-        Clock.schedule_interval(self.update, 1 / 60)
 
     def update(self, dt):
         rotated = Vector(BULLET_SPEED, 0).rotate(self.angle)
@@ -94,18 +117,19 @@ class Bullet(Entity):
 class GameWidget(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_interval(self.add_enemy, 1 / ENEMIES_PER_SECOND)
 
         self.player = Player(Window.width / 2, Window.height / 2)
         self.canvas.add(self.player.group)
 
         self.enemies = set()
+        self.bullets = set()
 
         self.keyboard = Window.request_keyboard(self.keyboard_closed, self, 'text')
         self.keyboard.bind(on_key_down=self.on_keyboard_down, on_key_up=self.on_keyboard_up)
         self.pressed_keys = set()
 
         Clock.schedule_interval(self.update, 1 / 60)
+        Clock.schedule_interval(self.add_enemy, 1 / ENEMIES_PER_SECOND)
 
     def keyboard_closed(self):
         self.keyboard.unbind(on_key_down=self.on_keyboard_down)
@@ -124,6 +148,20 @@ class GameWidget(Widget):
         for enemy in self.enemies:
             enemy.update(dt, self.player)
 
+            if self.player.intersects(enemy) and enemy.is_alive:
+                # this is broke af
+                print('dead')
+
+        for bullet in self.bullets.copy():
+            bullet.update(dt)
+
+            for enemy in self.enemies.copy():
+                if bullet.intersects(enemy) and bullet.is_alive and enemy.is_alive:
+                    enemy.kill()
+                    bullet.kill()
+                    self.enemies.remove(enemy)
+                    self.bullets.remove(bullet)
+
     def on_keyboard_down(self, keyboard, keycode, text, modifiers):
         self.pressed_keys.add(keycode[1])
         return True
@@ -136,9 +174,12 @@ class GameWidget(Widget):
         angle = math.degrees(math.atan2(touch.pos[1] - self.player.y, touch.pos[0] - self.player.x))
         bullet = Bullet(self.player.x, self.player.y, angle)
         self.canvas.add(bullet.group)
+        self.bullets.add(bullet)
 
     def add_enemy(self, dt):
         x, y = random.randint(0, Window.width), random.randint(0, Window.height)
+        while Vector(x, y).distance((self.player.x, self.player.y)) <= SAFE_RANGE:
+            x, y = random.randint(0, Window.width), random.randint(0, Window.height)
         enemy = Enemy(x, y)
         self.canvas.add(enemy.group)
         self.enemies.add(enemy)
