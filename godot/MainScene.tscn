@@ -1,38 +1,32 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://MainScene.gd" type="Script" id=1]
-[ext_resource path="res://Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://arialbd.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://arialbd.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Level1.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Level2.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Level3.tscn" type="PackedScene" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 
 size = 45
 use_mipmaps = false
 use_filter = false
-font_data = ExtResource( 3 )
+font_data = ExtResource( 2 )
 _sections_unfolded = [ "Settings" ]
 
-[node name="MainScene" type="Node2D" index="0"]
+[node name="MainScene" type="Node2D"]
 
 script = ExtResource( 1 )
-enemies_per_second = 0.5
-enemy_spawn_rate_delta = 1.5
-powerups_per_second = 0.3
-powerups_delta = 1.5
 
-[node name="Player" parent="." index="0" instance=ExtResource( 2 )]
-
-position = Vector2( 703.95, 162.45 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="ScoreLabel" type="Label" parent="." index="1"]
+[node name="ScoreLabel" type="Label" parent="." index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 50.0
-margin_bottom = 50.0
+margin_bottom = 51.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
 mouse_filter = 0
@@ -46,12 +40,53 @@ valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Rect", "custom_fonts" ]
+
+[node name="Player" parent="." index="1" instance=ExtResource( 3 )]
+
+position = Vector2( 108.875, 292.089 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Camera2D2" type="Camera2D" parent="Player" index="3"]
+
+anchor_mode = 1
+rotating = false
+current = true
+zoom = Vector2( 1, 1 )
+limit_left = -10000000
+limit_top = -10000000
+limit_right = 10000000
+limit_bottom = 10000000
+limit_smoothed = false
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = false
+smoothing_speed = 5.0
+offset_v = 0.0
+offset_h = 0.0
+drag_margin_left = 0.2
+drag_margin_top = 0.2
+drag_margin_right = 0.2
+drag_margin_bottom = 0.2
+editor_draw_screen = true
+editor_draw_limits = false
+editor_draw_drag_margin = false
+
+[node name="Level1" parent="." index="2" instance=ExtResource( 4 )]
+
+[node name="Level2" parent="." index="3" instance=ExtResource( 5 )]
+
+position = Vector2( 1017.08, -5.03503 )
+
+[node name="Level3" parent="." index="4" instance=ExtResource( 6 )]
+
+position = Vector2( 2039.2, -20.1403 )
 
 [connection signal="killed" from="Player" to="." method="_on_Player_killed"]
 
 [connection signal="shoot_bullet" from="Player" to="." method="_on_Player_shoot_bullet"]
 
 [connection signal="shoot_plasma" from="Player" to="." method="_on_Player_shoot_plasma"]
+
+[connection signal="spawn_powerup" from="Level1" to="." method="_on_spawn_powerup"]
 
 

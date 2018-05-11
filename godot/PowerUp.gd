@@ -5,11 +5,13 @@ var magnitude
 var player
 var is_activated = false
 
-func _ready():
+
+func set_position(x, y):
 	var width = ProjectSettings.get_setting("display/window/size/width")
 	var height = ProjectSettings.get_setting("display/window/size/height")
-	position.x = rand_range(0, width)
-	position.y = rand_range(0, height)
+	
+	position.x = rand_range(0, width) + x
+	position.y = rand_range(0, height) + y
 
 
 func init(_player, attr, magni, duration):

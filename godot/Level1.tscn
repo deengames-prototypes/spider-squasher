@@ -1,0 +1,116 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Level1.gd" type="Script" id=1]
+[ext_resource path="res://Wall.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Obstacle.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Hive.tscn" type="PackedScene" id=4]
+
+[node name="Level1" type="Node2D"]
+
+script = ExtResource( 1 )
+powerups_per_second = 0.3
+powerups_delta = 1.5
+
+[node name="OuterWalls" type="Node2D" parent="." index="0"]
+
+editor/display_folded = true
+
+[node name="Wall" parent="OuterWalls" index="0" instance=ExtResource( 2 )]
+
+position = Vector2( 831.025, 11.0803 )
+rotation = 1.5708
+
+[node name="Wall6" parent="OuterWalls" index="1" instance=ExtResource( 2 )]
+
+position = Vector2( 833.241, 593.906 )
+rotation = 1.5708
+
+[node name="Wall2" parent="OuterWalls" index="2" instance=ExtResource( 2 )]
+
+position = Vector2( 449.824, 10.8409 )
+rotation = 1.5708
+
+[node name="Wall5" parent="OuterWalls" index="3" instance=ExtResource( 2 )]
+
+position = Vector2( 452.041, 593.666 )
+rotation = 1.5708
+
+[node name="Wall3" parent="OuterWalls" index="4" instance=ExtResource( 2 )]
+
+position = Vector2( 190.545, 10.8409 )
+rotation = 1.5708
+
+[node name="Wall4" parent="OuterWalls" index="5" instance=ExtResource( 2 )]
+
+position = Vector2( 192.761, 593.666 )
+rotation = 1.5708
+
+[node name="Wall7" parent="OuterWalls" index="6" instance=ExtResource( 2 )]
+
+position = Vector2( 1019.02, 589.314 )
+
+[node name="Wall10" parent="OuterWalls" index="7" instance=ExtResource( 2 )]
+
+position = Vector2( 1.18225, 416.221 )
+
+[node name="Wall8" parent="OuterWalls" index="8" instance=ExtResource( 2 )]
+
+position = Vector2( 1021.74, 23.3984 )
+
+[node name="Wall9" parent="OuterWalls" index="9" instance=ExtResource( 2 )]
+
+position = Vector2( 3.90302, 191.089 )
+
+[node name="Obstacles" type="Node2D" parent="." index="1"]
+
+editor/display_folded = true
+
+[node name="Obstacle" parent="Obstacles" index="0" instance=ExtResource( 3 )]
+
+position = Vector2( 144.415, 503.158 )
+
+[node name="Obstacle2" parent="Obstacles" index="1" instance=ExtResource( 3 )]
+
+position = Vector2( 456.449, 492.51 )
+
+[node name="Obstacle3" parent="Obstacles" index="2" instance=ExtResource( 3 )]
+
+position = Vector2( 295.601, 261.983 )
+
+[node name="Obstacle4" parent="Obstacles" index="3" instance=ExtResource( 3 )]
+
+position = Vector2( 321.972, 416.299 )
+
+[node name="Obstacle5" parent="Obstacles" index="4" instance=ExtResource( 3 )]
+
+position = Vector2( 432.665, 149.773 )
+
+[node name="Obstacle6" parent="Obstacles" index="5" instance=ExtResource( 3 )]
+
+position = Vector2( 587.036, 315.978 )
+
+[node name="Obstacle7" parent="Obstacles" index="6" instance=ExtResource( 3 )]
+
+position = Vector2( 748.814, 156.366 )
+
+[node name="Obstacle8" parent="Obstacles" index="7" instance=ExtResource( 3 )]
+
+position = Vector2( 655.945, 465.213 )
+
+[node name="Obstacle9" parent="Obstacles" index="8" instance=ExtResource( 3 )]
+
+position = Vector2( 150.693, 155.125 )
+
+[node name="Obstacle10" parent="Obstacles" index="9" instance=ExtResource( 3 )]
+
+position = Vector2( 150.693, 155.125 )
+
+[node name="Hive" parent="." index="2" instance=ExtResource( 4 )]
+
+position = Vector2( 864, 338 )
+
+[connection signal="hive_died" from="Hive" to="." method="_on_hive_died"]
+
+[connection signal="spawn_enemy" from="Hive" to="." method="_on_enemy_spawn"]
+
+

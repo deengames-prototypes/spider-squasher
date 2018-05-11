@@ -21,9 +21,6 @@ func _ready():
 	# place player in the middle of the screen
 	position.x = ProjectSettings.get_setting("display/window/size/width") / 2
 	position.y = ProjectSettings.get_setting("display/window/size/height") / 2
-	
-	# add loop component child node
-	add_child(load("res://LoopComponent.gd").new())
 
 
 func _process(delta):
@@ -38,7 +35,7 @@ func _process(delta):
 	
 	if Input.is_action_pressed("shoot") and time_since_last_bullet >= 1/bullets_per_second:
 		time_since_last_bullet = 0
-		var angle = position.angle_to_point(get_viewport().get_mouse_position())
+		var angle = global_position.angle_to_point(get_global_mouse_position())
 		var bullet = Bullet.instance()
 		bullet.init(position.x, position.y, angle)
 		emit_signal("shoot_bullet", bullet)

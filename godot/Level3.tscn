@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Level2.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Hive.tscn" type="PackedScene" id=2]
+
+[node name="Level3" instance=ExtResource( 1 )]
+
+editor/display_folded = true
+
+[node name="Wall7" parent="OuterWalls" index="6"]
+
+position = Vector2( 1019.02, 414.462 )
+
+[node name="Wall8" parent="OuterWalls" index="8"]
+
+position = Vector2( 1018.73, 192.221 )
+
+[node name="Obstacle3" parent="Obstacles" index="2"]
+
+position = Vector2( 283.542, 240.88 )
+
+[node name="Obstacle7" parent="Obstacles" index="6"]
+
+position = Vector2( 598.08, 153.351 )
+
+[node name="Obstacle9" parent="Obstacles" index="8"]
+
+position = Vector2( 126.576, 227.477 )
+
+[node name="Obstacle10" parent="Obstacles" index="9"]
+
+position = Vector2( 220.031, 88.8019 )
+
+[node name="Hive" parent="." index="2"]
+
+position = Vector2( 810.387, 478.379 )
+
+[node name="Hive2" parent="." index="3"]
+
+position = Vector2( 811.364, 105.068 )
+
+[node name="Hive3" parent="." index="4" instance=ExtResource( 2 )]
+
+position = Vector2( 889.332, 292.424 )
+
+[connection signal="hive_died" from="Hive3" to="." method="_on_hive_died"]
+
+[connection signal="spawn_enemy" from="Hive3" to="." method="_on_enemy_spawn"]
+
+
